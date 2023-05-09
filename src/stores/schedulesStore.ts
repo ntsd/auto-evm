@@ -12,9 +12,11 @@ import { getWallet } from './walletsStore';
 import { getNetwork } from './networksStore';
 import { getContract } from './contractsStore';
 import { addToastMessage } from './toastStore';
+import ProcessingQueue from '../lib/processingQueue';
 
 const scheduler = new IntervalBasedCronScheduler(10 * 1000); // interval every 10 seconds
 const schedulerTaskId: { [id: string]: number } = {};
+const schedulerCallQueue = new ProcessingQueue<void>();
 
 export const schedulesStore = persist(
 	writable<Schedule[]>([]),
@@ -36,7 +38,7 @@ function newScheduleTask(schedule: Schedule): number {
 	return scheduler.registerTask(
 		cron,
 		() => {
-			console.log(`running schedule ${schedule}`);
+			console.log('running schedule', JSON.stringify(schedule));
 
 			const wallet = getWallet(schedule.walletAddress);
 			if (!wallet) {
@@ -53,21 +55,25 @@ function newScheduleTask(schedule: Schedule): number {
 				return;
 			}
 
-			callSmartContract(
-				wallet,
-				schedule.walletPassword,
-				network,
-				contract,
-				schedule.hexData,
-				schedule.gasLimit
-			)
-				.then((receipt) => {
-					addToastMessage(`schedule ${schedule.name} status: ${receipt.status}`);
-				})
-				.catch((e) => {
-					console.error(e);
-					addToastMessage(`schedule ${schedule.name} error: ${e}`);
-				});
+			schedulerCallQueue.enqueue(async () => {
+				try {
+					const receipt = await callSmartContract(
+						wallet,
+						schedule.walletPassword,
+						network,
+						contract,
+						schedule.hexData,
+						schedule.gasLimit
+					);
+					const msg = `schedule ${schedule.name} status: ${receipt.status}`;
+					console.log(msg);
+					addToastMessage(msg, 'success');
+				} catch (e) {
+					const errMsg = `schedule ${schedule.name} error: ${e}`;
+					console.error(errMsg);
+					addToastMessage(errMsg, 'error');
+				}
+			});
 		},
 		{
 			isOneTimeTask: false,
