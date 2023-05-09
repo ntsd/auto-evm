@@ -22,7 +22,7 @@ export interface Schedule {
 	id: string;
 	cron: string;
 	name: string;
-	walletId: string;
+	walletAddress: string;
 	walletPassword: string;
 	contractAddress: string;
 	hexData: string;

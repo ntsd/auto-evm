@@ -38,7 +38,7 @@ function newScheduleTask(schedule: Schedule): number {
 		() => {
 			console.log(`running schedule ${schedule}`);
 
-			const wallet = getWallet(schedule.walletId);
+			const wallet = getWallet(schedule.walletAddress);
 			if (!wallet) {
 				return;
 			}
@@ -81,7 +81,7 @@ function newScheduleTask(schedule: Schedule): number {
 
 export function addSchedule(
 	scheduleName: string,
-	walletId: string,
+	walletAddress: string,
 	walletPassword: string,
 	contractAddress: string,
 	hexData: string,
@@ -91,7 +91,7 @@ export function addSchedule(
 	const newSchedule: Schedule = {
 		id: crypto.randomUUID(),
 		name: scheduleName,
-		walletId,
+		walletAddress,
 		walletPassword,
 		contractAddress,
 		hexData,
