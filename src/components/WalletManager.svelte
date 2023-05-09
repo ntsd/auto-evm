@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CryptoJS from 'crypto-js';
-	import { addWallet, walletsStore } from '../stores/walletsStore';
+	import { addWallet, removeWallet, walletsStore } from '../stores/walletsStore';
 	import { addToastMessage } from '../stores/toastStore';
 
 	let walletName = '';
@@ -9,10 +9,19 @@
 	let walletPassword = '';
 
 	function addWalletHandler() {
+		if (
+			!walletName ||
+			!walletAddress ||
+			!walletPrivateKey
+		) {
+			return;
+		}
+
 		const encryptedPrivateKey = CryptoJS.AES.encrypt(walletPrivateKey, walletPassword).toString();
 		addWallet(walletName, walletAddress, encryptedPrivateKey);
 		addToastMessage(`Add wallet ${walletAddress}`);
 
+		walletName = '';
 		walletAddress = '';
 		walletPrivateKey = '';
 		walletPassword = '';
@@ -45,7 +54,7 @@
 					<div class="label">
 						<span class="label-text">Private Key</span>
 					</div>
-					<input type="text" bind:value={walletPrivateKey} class="input input-bordered" />
+					<input type="password" bind:value={walletPrivateKey} class="input input-bordered" />
 				</div>
 				<div class="form-control">
 					<div class="label">
@@ -54,9 +63,9 @@
 					<input type="password" bind:value={walletPassword} class="input input-bordered" />
 				</div>
 				<div class="form-control">
-					<label for="add-wallet" on:keypress={addWalletHandler} class="btn btn-primary">
+					<button on:click={addWalletHandler} class="btn btn-primary">
 						Add Wallet
-					</label>
+					</button>
 				</div>
 			</div>
 		</label>
@@ -67,6 +76,7 @@
 				<tr>
 					<th>Name</th>
 					<th>Address</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -74,6 +84,14 @@
 					<tr>
 						<td>{wallet.name}</td>
 						<td>{wallet.address}</td>
+						<td>
+							<button
+								class="btn btn-accent"
+								on:click={() => {
+									removeWallet(wallet.address);
+								}}>Delete</button
+							>
+						</td>
 					</tr>
 				{/each}
 			</tbody>

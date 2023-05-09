@@ -35,7 +35,7 @@
 <div class="fixed bottom-4 right-4 space-y-2">
   {#each toasts as toast}
     <div
-      class="alert alert-{toast.status}"
+      class="alert alert-{toast.status} z-50"
       in:fade={{ duration: 300 }}
       out:fade={{ duration: 300 }}
       style={toast.visible ? '' : 'display: none;'}

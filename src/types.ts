@@ -1,7 +1,6 @@
 export interface Wallet {
-	id: string;
-	name: string;
 	address: string;
+	name: string;
 	encryptedPrivateKey: string;
 }
 
@@ -21,9 +20,11 @@ export interface SmartContract {
 
 export interface Schedule {
 	id: string;
+	cron: string;
 	name: string;
 	walletId: string;
-	chainId: string;
+	walletPassword: string;
 	contractAddress: string;
 	hexData: string;
+	gasLimit: number;
 }

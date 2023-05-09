@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { addContract, contractsStore } from '../stores/contractsStore';
+	import { addContract, contractsStore, removeContract } from '../stores/contractsStore';
 	import { networksStore } from '../stores/networksStore';
 	import { addToastMessage } from '../stores/toastStore';
 
@@ -8,6 +8,10 @@
 	let contractAddress = '';
 
 	function addNewContract() {
+		if (!selectedChainId || !contractName || !contractAddress) {
+			return;
+		}
+
 		addContract(contractName, contractAddress, selectedChainId);
 		addToastMessage(`Add contract ${contractName}`);
 
@@ -51,9 +55,7 @@
 					</select>
 				</div>
 				<div class="form-control">
-					<label for="add-contract" on:keypress={addNewContract} class="btn btn-primary">
-						Add Contract
-					</label>
+					<button on:click={addNewContract} class="btn btn-primary"> Add Contract </button>
 				</div>
 			</div>
 		</label>
@@ -64,6 +66,7 @@
 				<tr>
 					<th>Name</th>
 					<th>Address</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -71,6 +74,14 @@
 					<tr>
 						<td>{contract.contractName}</td>
 						<td>{contract.contractAddress}</td>
+						<td>
+							<button
+								class="btn btn-accent"
+								on:click={() => {
+									removeContract(contract.contractAddress);
+								}}>Delete</button
+							>
+						</td>
 					</tr>
 				{/each}
 			</tbody>

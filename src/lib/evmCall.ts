@@ -9,7 +9,8 @@ export async function callSmartContract(
 	walletPassword: string,
 	network: Network,
 	contract: SmartContract,
-	hexData: string
+	hexData: string,
+	gasLimit: number
 ): Promise<TransactionReceipt> {
 	const encryptedPrivateKey = wallet.encryptedPrivateKey;
 	const privateKeyBytes = CryptoJS.AES.decrypt(encryptedPrivateKey, walletPassword);
@@ -30,7 +31,7 @@ export async function callSmartContract(
 		to: contractAddress,
 		value: '0x0',
 		gasPrice,
-		gasLimit: 21000,
+		gasLimit,
 		nonce,
 		data: hexData
 	};
@@ -43,9 +44,14 @@ export async function callSmartContract(
 		throw new Error('unable to sign transaction');
 	}
 
-	const transactionReceipt = await web3Provider.eth.sendSignedTransaction(
-		signedTransaction.rawTransaction
-	);
-
-	return transactionReceipt;
+	try {
+		const transactionReceipt = await web3Provider.eth.sendSignedTransaction(
+			signedTransaction.rawTransaction
+		);
+		return transactionReceipt;
+	} catch (error) {
+		console.error('error while sending signed transaction:', error);
+		console.error('error object:', JSON.stringify(error, null, 2));
+		throw error;
+	}
 }

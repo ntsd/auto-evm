@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { addNetwork, networksStore } from '../stores/networksStore';
+	import { addNetwork, networksStore, removeNetwork } from '../stores/networksStore';
 	import { addToastMessage } from '../stores/toastStore';
 
 	let networkName = '';
@@ -9,6 +9,10 @@
 	let blockExplorerUrl = '';
 
 	function addNetworkHandler() {
+		if (!networkName || !chainId || !rpcURL || !currencySymbol || !blockExplorerUrl) {
+			return;
+		}
+
 		addNetwork(chainId, networkName, rpcURL, currencySymbol, blockExplorerUrl);
 		addToastMessage(`Add network ${networkName}`);
 
@@ -59,9 +63,7 @@
 					<input type="text" bind:value={blockExplorerUrl} class="input input-bordered" />
 				</div>
 				<div class="form-control">
-					<label for="add-network" on:keypress={addNetworkHandler} class="btn btn-primary">
-						Add Network
-					</label>
+					<button on:click={addNetworkHandler} class="btn btn-primary"> Add Network </button>
 				</div>
 			</div>
 		</label>
@@ -74,7 +76,7 @@
 					<th>Chain ID</th>
 					<th>RPC URL</th>
 					<th>Currency Symbol</th>
-					<th>Block Explorer URL</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -84,7 +86,14 @@
 						<td>{network.chainId}</td>
 						<td>{network.rpcURL}</td>
 						<td>{network.currencySymbol}</td>
-						<td>{network.blockExplorerUrl}</td>
+						<td>
+							<button
+								class="btn btn-accent"
+								on:click={() => {
+									removeNetwork(network.chainId);
+								}}>Delete</button
+							>
+						</td>
 					</tr>
 				{/each}
 			</tbody>

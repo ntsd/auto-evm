@@ -4,7 +4,7 @@ import {
 	createEncryptionStorage,
 	GCMEncryption
 } from '@macfja/svelte-persistent-store';
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import type { Network } from '../types';
 
 export const networksStore = persist(
@@ -23,6 +23,20 @@ export function addNetwork(
 	currencySymbol: string,
 	blockExplorerUrl: string
 ) {
+	if (getNetwork(chainId)) {
+		throw new Error('chain id already exists');
+	}
+
 	const newNetwork: Network = { name, chainId, rpcURL, currencySymbol, blockExplorerUrl };
 	networksStore.update((n) => [...n, newNetwork]);
+}
+
+export function getNetwork(chainId: string) {
+	return get(networksStore).find((n) => n.chainId === chainId);
+}
+
+export function removeNetwork(chainId: string) {
+	networksStore.update((networks) => {
+		return networks.filter((n) => n.chainId !== chainId);
+	});
 }

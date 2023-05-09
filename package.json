@@ -33,7 +33,7 @@
 	"dependencies": {
 		"@macfja/svelte-persistent-store": "^2.3.0",
 		"autoprefixer": "^10.4.14",
-		"cron-schedule": "^4.0.0",
+		"@hotcode/cron-schedule": "^4.0.0",
 		"crypto-js": "^4.1.1",
 		"daisyui": "^2.51.6",
 		"postcss": "^8.4.23",
