@@ -13,6 +13,7 @@ import { getNetwork } from './networksStore';
 import { getContract } from './contractsStore';
 import { addToastMessage } from './toastStore';
 import ProcessingQueue from '../lib/processingQueue';
+import { sleep } from '$lib/sleep';
 
 const scheduler = new IntervalBasedCronScheduler(10 * 1000); // interval every 10 seconds
 const schedulerTaskId: { [id: string]: number } = {};
@@ -68,6 +69,8 @@ function newScheduleTask(schedule: Schedule): number {
 					const msg = `schedule ${schedule.name} status: ${receipt.status}`;
 					console.log(msg);
 					addToastMessage(msg, 'success');
+
+					await sleep(10000); // sleep 10 seconds before the next queue
 				} catch (e) {
 					const errMsg = `schedule ${schedule.name} error: ${e}`;
 					console.error(errMsg);
