@@ -35,6 +35,17 @@ export function getNetwork(chainId: string) {
 	return get(networksStore).find((n) => n.chainId === chainId);
 }
 
+export function updateNetwork(newNetwork: Network) {
+	return networksStore.update((networks) =>
+		networks.map((c) => {
+			if (c.chainId === newNetwork.chainId) {
+				return newNetwork;
+			}
+			return c;
+		})
+	);
+}
+
 export function removeNetwork(chainId: string) {
 	networksStore.update((networks) => {
 		return networks.filter((n) => n.chainId !== chainId);

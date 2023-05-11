@@ -20,7 +20,7 @@ export async function callSmartContract(
 		throw new Error('invalid wallet password');
 	}
 
-	const contractAddress = contract.contractAddress;
+	const contractAddress = contract.address;
 
 	web3Provider.setProvider(new Web3.providers.HttpProvider(network.rpcURL));
 

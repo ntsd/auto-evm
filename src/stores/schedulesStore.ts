@@ -39,7 +39,7 @@ function newScheduleTask(schedule: Schedule): number {
 	return scheduler.registerTask(
 		cron,
 		() => {
-			console.log('running schedule', JSON.stringify(schedule));
+			console.log(`running schedule ${schedule.name}`);
 
 			const wallet = getWallet(schedule.walletAddress);
 			if (!wallet) {
@@ -112,6 +112,17 @@ export function addSchedule(
 	schedulerTaskId[newSchedule.id] = taskId;
 
 	schedulesStore.update((s) => [...s, newSchedule]);
+}
+
+export function updateSchedule(newSchedule: Schedule) {
+	return schedulesStore.update((schedules) =>
+		schedules.map((c) => {
+			if (c.id === newSchedule.id) {
+				return newSchedule;
+			}
+			return c;
+		})
+	);
 }
 
 export function removeSchedule(id: string) {

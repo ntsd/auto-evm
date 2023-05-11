@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { removeSchedule, schedulesStore } from '../../stores/schedulesStore';
+	import ScheduleModal from './ScheduleModal.svelte';
 </script>
 
 <div class="overflow-x-auto">
@@ -17,6 +18,7 @@
 					<td>{schedule.name}</td>
 					<td>{schedule.cron}</td>
 					<td>
+						<ScheduleModal isEdit={true} {schedule} />
 						<button
 							class="btn btn-accent"
 							on:click={() => {

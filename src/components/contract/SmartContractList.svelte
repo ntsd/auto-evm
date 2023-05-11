@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { contractsStore, removeContract } from '../../stores/contractsStore';
+	import SmartContractModal from './SmartContractModal.svelte';
 </script>
 
 <div class="overflow-x-auto">
@@ -14,13 +15,14 @@
 		<tbody>
 			{#each $contractsStore as contract}
 				<tr>
-					<td>{contract.contractName}</td>
-					<td>{contract.contractAddress}</td>
+					<td>{contract.name}</td>
+					<td>{contract.address}</td>
 					<td>
+						<SmartContractModal isEdit {contract} />
 						<button
 							class="btn btn-accent"
 							on:click={() => {
-								removeContract(contract.contractAddress);
+								removeContract(contract.address);
 							}}>Delete</button
 						>
 					</td>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { networksStore, removeNetwork } from '../../stores/networksStore';
+	import NetworkModal from './NetworkModal.svelte';
 </script>
 
 <div class="overflow-x-auto">
@@ -21,6 +22,7 @@
 					<td>{network.rpcURL}</td>
 					<td>{network.currencySymbol}</td>
 					<td>
+						<NetworkModal isEdit={true} {network} />
 						<button
 							class="btn btn-accent"
 							on:click={() => {

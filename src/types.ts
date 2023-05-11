@@ -13,8 +13,8 @@ export interface Network {
 }
 
 export interface SmartContract {
-	contractAddress: string;
-	contractName: string;
+	address: string;
+	name: string;
 	chainId: string;
 }
 

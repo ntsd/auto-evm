@@ -16,21 +16,32 @@ export const contractsStore = persist(
 	'contracts'
 );
 
-export function addContract(contractName: string, contractAddress: string, chainId: string) {
-	if (getContract(contractAddress)) {
+export function addContract(name: string, address: string, chainId: string) {
+	if (getContract(address)) {
 		throw new Error('contract address already exists');
 	}
 
-	const newContract: SmartContract = { contractName, contractAddress, chainId };
+	const newContract: SmartContract = { name, address, chainId };
 	contractsStore.update((c) => [...c, newContract]);
 }
 
-export function getContract(contractAddress: string) {
-	return get(contractsStore).find((c) => c.contractAddress === contractAddress);
+export function getContract(address: string) {
+	return get(contractsStore).find((c) => c.address === address);
+}
+
+export function updateContract(newContract: SmartContract) {
+	return contractsStore.update((contracts) =>
+		contracts.map((c) => {
+			if (c.address === newContract.address) {
+				return newContract;
+			}
+			return c;
+		})
+	);
 }
 
 export function removeContract(contractAddress: string) {
 	contractsStore.update((contracts) => {
-		return contracts.filter((contract) => contract.contractAddress !== contractAddress);
+		return contracts.filter((contract) => contract.address !== contractAddress);
 	});
 }
