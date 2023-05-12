@@ -14,6 +14,7 @@ import { getContract } from './contractsStore';
 import { addToastMessage } from './toastStore';
 import ProcessingQueue from '../lib/processingQueue';
 import { sleep } from '$lib/sleep';
+import { generateRandomInteger } from '$lib/random';
 
 const scheduler = new IntervalBasedCronScheduler(10 * 1000); // interval every 10 seconds
 const schedulerTaskId: { [id: string]: number } = {};
@@ -35,10 +36,20 @@ get(schedulesStore).forEach((s) => {
 
 function newScheduleTask(schedule: Schedule): number {
 	const cron = parseCronExpression(schedule.cron);
+	const scheduleId = schedule.id;
 
 	return scheduler.registerTask(
 		cron,
 		() => {
+			// get schedule againt for the updated one
+			const schedule = getSchedule(scheduleId);
+			if (!schedule) {
+				return;
+			}
+
+			// skip if schedule not enabled
+			if (!schedule.enabled) return;
+
 			console.log(`running schedule ${schedule.name}`);
 
 			const wallet = getWallet(schedule.walletAddress);
@@ -70,7 +81,7 @@ function newScheduleTask(schedule: Schedule): number {
 					console.log(msg);
 					addToastMessage(msg, 'success');
 
-					await sleep(10000); // sleep 10 seconds before the next queue
+					await sleep(generateRandomInteger(10, 30) * 1000); // sleep 10 - 30 seconds before the next queue
 				} catch (e) {
 					const errMsg = `schedule ${schedule.name} error: ${e}`;
 					console.error(errMsg);
@@ -105,7 +116,8 @@ export function addSchedule(
 		contractAddress,
 		hexData,
 		gasLimit,
-		cron
+		cron,
+		enabled: true
 	};
 
 	const taskId = newScheduleTask(newSchedule);
@@ -123,6 +135,10 @@ export function updateSchedule(newSchedule: Schedule) {
 			return c;
 		})
 	);
+}
+
+export function getSchedule(id: string) {
+	return get(schedulesStore).find((s) => s.id === id);
 }
 
 export function removeSchedule(id: string) {

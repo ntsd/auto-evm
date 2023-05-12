@@ -27,4 +27,5 @@ export interface Schedule {
 	contractAddress: string;
 	hexData: string;
 	gasLimit: number;
+	enabled: boolean;
 }

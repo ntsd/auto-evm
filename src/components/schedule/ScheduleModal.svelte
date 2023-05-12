@@ -17,7 +17,8 @@
 		contractAddress: '',
 		hexData: '',
 		cron: '*/5 * * * *',
-		gasLimit: 21880
+		gasLimit: 21880,
+		enabled: true
 	};
 
 	let forId = isEdit ? `edit-schedule-${schedule.id}` : 'add-schedule';
@@ -154,6 +155,12 @@
 			{/if}
 		</h3>
 		<div class="py-4 space-y-2">
+			<div class="form-control">
+				<label class="label cursor-pointer">
+					<span class="label-text">Enabled</span>
+					<input type="checkbox" class="toggle toggle-primary" bind:checked={schedule.enabled} />
+				</label>
+			</div>
 			<div class="form-control">
 				<div class="label">
 					<span class="label-text">Schedule Name</span>
