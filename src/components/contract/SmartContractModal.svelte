@@ -46,6 +46,7 @@
 <input type="checkbox" id={forId} class="modal-toggle" />
 <label for={forId} class="modal cursor-pointer">
 	<label class="modal-box relative" for="">
+		<label for={forId} class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
 		<h3 class="text-lg font-bold">
 			{#if isEdit}
 				Edit Smart Contract

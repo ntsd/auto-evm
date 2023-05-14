@@ -8,6 +8,8 @@
 	let walletPrivateKey = '';
 	let walletPassword = '';
 
+	let forId = 'add-wallet';
+
 	function addWalletHandler() {
 		if (!walletName || !walletAddress || !walletPrivateKey) {
 			return;
@@ -24,9 +26,11 @@
 	}
 </script>
 
-<input type="checkbox" id="add-wallet" class="modal-toggle" />
-<label for="add-wallet" class="modal cursor-pointer">
-	<label class="modal-box relative" for="">
+<label for={forId} class="btn btn-primary">Add Wallet</label>
+<input type="checkbox" id={forId} class="modal-toggle" />
+<label for={forId} class="modal cursor-pointer">
+	<label class="modal-box relative" for={forId}>
+		<label for={forId} class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
 		<h3 class="text-lg font-bold">Add Wallet</h3>
 		<div class="py-4 space-y-2">
 			<div class="form-control">
