@@ -1,20 +1,21 @@
 import {
 	persist,
 	createEncryptionStorage,
-	createLocalStorage,
+	createIndexedDBStorage,
 	GCMEncryption
 } from '@macfja/svelte-persistent-store';
 import { get, writable } from 'svelte/store';
 import type { SmartContract } from '../types';
 
-export const contractsStore = persist(
-	writable<SmartContract[]>([]),
-	createEncryptionStorage(
-		createLocalStorage(),
-		new GCMEncryption('70082cd49c70af103241bd1fa3615434b5d34940fae0c1708e34818a5171698e')
-	),
-	'contracts'
-);
+export let contractsStore = writable<SmartContract[]>([]);
+
+export function unlockContractStore(hexPassword: string) {
+	contractsStore = persist(
+		writable<SmartContract[]>([]),
+		createEncryptionStorage(createIndexedDBStorage(), new GCMEncryption(hexPassword)),
+		'contracts'
+	);
+}
 
 export function addContract(name: string, address: string, chainId: string) {
 	if (getContract(address)) {

@@ -18,6 +18,13 @@ export interface SmartContract {
 	chainId: string;
 }
 
+export interface Token {
+	address: string;
+	name: string;
+	decimal: number;
+	chainId: string;
+}
+
 export interface Schedule {
 	id: string;
 	cron: string;
@@ -28,4 +35,14 @@ export interface Schedule {
 	hexData: string;
 	gasLimit: number;
 	enabled: boolean;
+}
+
+export interface Setting {
+	isFirstTime: boolean;
+	salt: string;
+}
+
+export interface Unlock {
+	hashPassword: string;
+	isUnlocked: boolean;
 }

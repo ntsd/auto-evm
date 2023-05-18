@@ -7,14 +7,16 @@ import {
 import { get, writable } from 'svelte/store';
 import type { Wallet } from '../types';
 
-export const walletsStore = persist(
-	writable<Wallet[]>([]),
-	createEncryptionStorage(
-		createLocalStorage(),
-		new GCMEncryption('da27e13c8b9b01ca61a8eaa1b94d2977d67f3b626def9315a00483962b6a065b')
-	),
-	'wallets'
-);
+// export fake wallet store (no storage)
+export let walletsStore = writable<Wallet[]>([]);
+
+export function unlockWalletStore(hexPassword: string) {
+	walletsStore = persist(
+		writable<Wallet[]>([]),
+		createEncryptionStorage(createLocalStorage(), new GCMEncryption(hexPassword)),
+		'wallets'
+	);
+}
 
 export function addWallet(name: string, address: string, encryptedPrivateKey: string) {
 	const newWallet: Wallet = {

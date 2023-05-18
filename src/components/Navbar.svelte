@@ -4,7 +4,7 @@
 	import active from 'svelte-spa-router/active';
 </script>
 
-<div class="navbar w-full">
+<div class="navbar w-full lg:px-8">
 	<div class="navbar-start">
 		<div class="dropdown">
 			<button tabindex="0" class="btn btn-ghost lg:hidden">
@@ -26,9 +26,10 @@
 				tabindex="0"
 				class="menu menu-compact dropdown-content p-4 shadow bg-base-100 rounded-box gap-4"
 			>
-				<a href="/" use:link class="link" use:active={{ className: 'link' }}>Schedule</a>
+				<a href="/" use:link use:active={{ className: 'link' }}>Schedule</a>
 				<a href="/wallet" use:link use:active={{ className: 'link' }}>Wallet</a>
 				<a href="/network" use:link use:active={{ className: 'link' }}>Network</a>
+				<a href="/token" use:link use:active={{ className: 'link' }}>Token</a>
 				<a href="/contract" use:link use:active={{ className: 'link' }}>Contract</a>
 			</button>
 		</div>
@@ -38,6 +39,7 @@
 		<a href="/" use:link class="link" use:active={{ className: 'link' }}>Schedule</a>
 		<a href="/wallet" use:link use:active={{ className: 'link' }}>Wallet</a>
 		<a href="/network" use:link use:active={{ className: 'link' }}>Network</a>
+		<a href="/token" use:link use:active={{ className: 'link' }}>Token</a>
 		<a href="/contract" use:link use:active={{ className: 'link' }}>Contract</a>
 	</div>
 	<div class="navbar-end">

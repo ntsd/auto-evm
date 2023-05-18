@@ -7,6 +7,9 @@
 	import { addToastMessage } from '../../stores/toastStore';
 	import { estimateGasLimit } from '$lib/estimateGas';
 	import type { Schedule } from '../../types';
+	import ProcessingQueue from '$lib/processingQueue';
+	import { sleep } from '$lib/sleep';
+	import { generateRandomInteger } from '$lib/random';
 
 	export let isEdit: boolean = false;
 	export let schedule: Schedule = {
@@ -20,6 +23,7 @@
 		gasLimit: 21880,
 		enabled: true
 	};
+	let testCallRepeatTimes = 10;
 
 	let forId = isEdit ? `edit-schedule-${schedule.id}` : 'add-schedule';
 
@@ -38,7 +42,12 @@
 			return;
 		}
 
-		estimateGasLimit(wallet.address, contract.address, schedule.hexData)
+		const network = getNetwork(contract.chainId);
+		if (!network) {
+			return;
+		}
+
+		estimateGasLimit(network.rpcURL, wallet.address, contract.address, schedule.hexData)
 			.then((limit) => {
 				schedule.gasLimit = limit;
 			})
@@ -135,6 +144,53 @@
 				addToastMessage(`call contract failed ${e}`);
 			});
 	}
+
+	function testCallRepeat() {
+		if (!schedule.walletAddress || !schedule.contractAddress || !schedule.hexData) {
+			return;
+		}
+
+		const wallet = getWallet(schedule.walletAddress);
+		if (!wallet) {
+			return;
+		}
+
+		const contract = getContract(schedule.contractAddress);
+		if (!contract) {
+			return;
+		}
+
+		const network = getNetwork(contract.chainId);
+		if (!network) {
+			return;
+		}
+
+		const schedulerCallQueue = new ProcessingQueue<void>();
+
+		for (let i = 1; i <= testCallRepeatTimes; i++) {
+			schedulerCallQueue.enqueue(async () => {
+				try {
+					const receipt = await callSmartContract(
+						wallet,
+						schedule.walletPassword,
+						network,
+						contract,
+						schedule.hexData,
+						schedule.gasLimit
+					);
+					const msg = `schedule call ${schedule.name} (${i}) status: ${receipt.status}`;
+					console.log(msg);
+					addToastMessage(msg, 'success');
+
+					await sleep(generateRandomInteger(10, 20) * 1000); // sleep 20 - 30 seconds before the next queue
+				} catch (e) {
+					const errMsg = `schedule ${schedule.name} (${i}) error: ${e}`;
+					console.error(errMsg);
+					addToastMessage(errMsg, 'error');
+				}
+			});
+		}
+	}
 </script>
 
 <label for={forId} class="btn btn-primary">
@@ -187,7 +243,7 @@
 			</div>
 			<div class="form-control">
 				<div class="label">
-					<span class="label-text">Wallet Password</span>
+					<span class="label-text">Wallet Password (optional)</span>
 				</div>
 				<input type="password" bind:value={schedule.walletPassword} class="input input-bordered" />
 			</div>
@@ -228,6 +284,19 @@
 				{:else}
 					<button on:click={addScheduleHandler} class="btn btn-primary flex-grow"> Add </button>
 				{/if}
+			</div>
+			<div class="form-control">
+				<div class="label">
+					<span class="label-text">Call Repeat Times</span>
+				</div>
+				<input
+					type="number"
+					bind:value={testCallRepeatTimes}
+					class="input input-bordered flex-grow"
+				/>
+			</div>
+			<div class="form-control flex flex-row gap-4">
+				<button on:click={testCallRepeat} class="btn btn-secondary flex-grow">Call Repeats</button>
 			</div>
 		</div>
 	</label>

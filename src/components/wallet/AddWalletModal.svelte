@@ -53,7 +53,7 @@
 			</div>
 			<div class="form-control">
 				<div class="label">
-					<span class="label-text">Password</span>
+					<span class="label-text">Password (optional)</span>
 				</div>
 				<input type="password" bind:value={walletPassword} class="input input-bordered" />
 			</div>
