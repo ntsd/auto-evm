@@ -4,11 +4,12 @@
 	import { addToastMessage } from '../../stores/toastStore';
 	import type { SmartContract } from '../../types';
 
+	export let chainId: string;
 	export let isEdit: boolean = false;
 	export let contract: SmartContract = {
 		name: '',
 		address: '',
-		chainId: ''
+		chainId: chainId
 	};
 
 	let forId = isEdit ? `edit-contract-${contract.address}` : 'add-contract';
@@ -32,7 +33,7 @@
 
 		contract.name = '';
 		contract.address = '';
-		contract.chainId = '';
+		contract.chainId = chainId;
 	}
 </script>
 
@@ -71,17 +72,6 @@
 					disabled={isEdit}
 					class="input input-bordered"
 				/>
-			</div>
-			<div class="form-control">
-				<div class="label">
-					<span class="label-text">Network</span>
-				</div>
-				<select bind:value={contract.chainId} class="select select-bordered">
-					<option value="">Select a network</option>
-					{#each $networksStore as network}
-						<option value={network.chainId}>{network.name}</option>
-					{/each}
-				</select>
 			</div>
 			<div class="form-control">
 				{#if isEdit}

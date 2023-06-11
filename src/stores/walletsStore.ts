@@ -7,16 +7,22 @@ import {
 import { get, writable } from 'svelte/store';
 import type { Wallet } from '../types';
 
-export const walletsStore = persist(
-	writable<Wallet[]>([]),
-	createEncryptionStorage(
-		createLocalStorage(),
-		new GCMEncryption('da27e13c8b9b01ca61a8eaa1b94d2977d67f3b626def9315a00483962b6a065b')
-	),
-	'wallets'
-);
+// export fake wallet store (no storage)
+export let walletsStore = writable<Wallet[]>([]);
+
+export function unlockWalletStore(hexPassword: string) {
+	walletsStore = persist(
+		writable<Wallet[]>([]),
+		createEncryptionStorage(createLocalStorage(), new GCMEncryption(hexPassword)),
+		'wallets'
+	);
+}
 
 export function addWallet(name: string, address: string, encryptedPrivateKey: string) {
+	if (getWallet(address)) {
+		throw new Error('wallet address already exists');
+	}
+
 	const newWallet: Wallet = {
 		name,
 		address,
@@ -33,4 +39,15 @@ export function removeWallet(address: string) {
 	walletsStore.update((wallets) => {
 		return wallets.filter((w) => w.address !== address);
 	});
+}
+
+export function updateNetwork(newWallet: Wallet) {
+	return walletsStore.update((wallets) =>
+		wallets.map((w) => {
+			if (w.address === newWallet.address) {
+				return newWallet;
+			}
+			return w;
+		})
+	);
 }

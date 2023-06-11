@@ -31,11 +31,12 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@hotcode/cron-schedule": "^4.0.0",
 		"@macfja/svelte-persistent-store": "^2.3.0",
 		"autoprefixer": "^10.4.14",
-		"@hotcode/cron-schedule": "^4.0.0",
 		"crypto-js": "^4.1.1",
 		"daisyui": "^2.51.6",
+		"node-machine-id": "^1.1.12",
 		"postcss": "^8.4.23",
 		"svelte": "^3.44.2",
 		"svelte-spa-router": "^3.3.0",

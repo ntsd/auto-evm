@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { removeWallet, walletsStore } from '../../stores/walletsStore';
+	import WalletModal from './WalletModal.svelte';
 </script>
 
 <div class="overflow-x-auto">
@@ -17,6 +18,7 @@
 					<td>{wallet.name}</td>
 					<td>{wallet.address}</td>
 					<td>
+						<WalletModal isEdit={true} {wallet} />
 						<button
 							class="btn btn-accent"
 							on:click={() => {

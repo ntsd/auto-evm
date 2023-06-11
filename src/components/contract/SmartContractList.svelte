@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { contractsStore, removeContract } from '../../stores/contractsStore';
 	import SmartContractModal from './SmartContractModal.svelte';
+
+	export let chainId: string;
 </script>
 
 <div class="overflow-x-auto">
@@ -18,7 +20,7 @@
 					<td>{contract.name}</td>
 					<td>{contract.address}</td>
 					<td>
-						<SmartContractModal isEdit {contract} />
+						<SmartContractModal isEdit {contract} {chainId} />
 						<button
 							class="btn btn-accent"
 							on:click={() => {

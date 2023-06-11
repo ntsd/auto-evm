@@ -9,12 +9,19 @@ export interface Network {
 	name: string;
 	rpcURL: string;
 	currencySymbol: string;
-	blockExplorerUrl: string;
+	blockExplorerUrl?: string;
 }
 
 export interface SmartContract {
 	address: string;
 	name: string;
+	chainId: string;
+}
+
+export interface Token {
+	address: string;
+	name: string;
+	decimal: number;
 	chainId: string;
 }
 
@@ -28,4 +35,14 @@ export interface Schedule {
 	hexData: string;
 	gasLimit: number;
 	enabled: boolean;
+}
+
+export interface Setting {
+	isFirstTime: boolean;
+	salt: string;
+}
+
+export interface Unlock {
+	hashPassword: string;
+	isUnlocked: boolean;
 }

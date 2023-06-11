@@ -1,13 +1,13 @@
 import {
 	persist,
-	createLocalStorage,
+	createIndexedDBStorage,
 	GCMEncryption,
 	createEncryptionStorage
 } from '@macfja/svelte-persistent-store';
 import { get, writable } from 'svelte/store';
 import type { Schedule } from '../types';
 import { IntervalBasedCronScheduler, parseCronExpression } from '@hotcode/cron-schedule';
-import { callSmartContract } from '$lib/evmCall';
+import { callSmartContract } from '$lib/callSmartContract';
 import { getWallet } from './walletsStore';
 import { getNetwork } from './networksStore';
 import { getContract } from './contractsStore';
@@ -20,14 +20,15 @@ const scheduler = new IntervalBasedCronScheduler(10 * 1000); // interval every 1
 const schedulerTaskId: { [id: string]: number } = {};
 const schedulerCallQueue = new ProcessingQueue<void>();
 
-export const schedulesStore = persist(
-	writable<Schedule[]>([]),
-	createEncryptionStorage(
-		createLocalStorage(),
-		new GCMEncryption('3a2f9500fc967cc784923f6876abbb3dcf64b8b94ad7dc8dd1cdfc002729c8f7')
-	),
-	'calls'
-);
+export let schedulesStore = writable<Schedule[]>([]);
+
+export function unlockSchedulesStore(hexPassword: string) {
+	schedulesStore = persist(
+		writable<Schedule[]>([]),
+		createEncryptionStorage(createIndexedDBStorage(), new GCMEncryption(hexPassword)),
+		'calls'
+	);
+}
 
 get(schedulesStore).forEach((s) => {
 	const taskId = newScheduleTask(s);

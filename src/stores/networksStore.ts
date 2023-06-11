@@ -1,20 +1,22 @@
 import {
 	persist,
-	createLocalStorage,
 	createEncryptionStorage,
-	GCMEncryption
+	GCMEncryption,
+	createIndexedDBStorage
 } from '@macfja/svelte-persistent-store';
 import { get, writable } from 'svelte/store';
 import type { Network } from '../types';
+import { defaultNetwork, ethNetwork } from '../configs';
 
-export const networksStore = persist(
-	writable<Network[]>([]),
-	createEncryptionStorage(
-		createLocalStorage(),
-		new GCMEncryption('14bc628bfee7441619ee3ecb45ea158afec659900222a850cd051ddbffe3ddea')
-	),
-	'networks'
-);
+export let networksStore = writable<Network[]>([]);
+
+export function unlockNetworkStore(hexPassword: string) {
+	networksStore = persist(
+		writable<Network[]>([defaultNetwork, ethNetwork]),
+		createEncryptionStorage(createIndexedDBStorage(), new GCMEncryption(hexPassword)),
+		'networks'
+	);
+}
 
 export function addNetwork(
 	chainId: string,
