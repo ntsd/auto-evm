@@ -3,7 +3,7 @@
 	import { getNetwork } from '../../stores/networksStore';
 	import { contractsStore, getContract } from '../../stores/contractsStore';
 	import { addSchedule, updateSchedule } from '../../stores/schedulesStore';
-	import { callSmartContract } from '../../lib/evmCall';
+	import { callSmartContract } from '../../lib/callSmartContract';
 	import { addToastMessage } from '../../stores/toastStore';
 	import { estimateGasLimit } from '$lib/estimateGas';
 	import type { Schedule } from '../../types';

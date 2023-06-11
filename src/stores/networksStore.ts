@@ -6,12 +6,13 @@ import {
 } from '@macfja/svelte-persistent-store';
 import { get, writable } from 'svelte/store';
 import type { Network } from '../types';
+import { defaultNetwork, ethNetwork } from '../configs';
 
 export let networksStore = writable<Network[]>([]);
 
 export function unlockNetworkStore(hexPassword: string) {
 	networksStore = persist(
-		writable<Network[]>([]),
+		writable<Network[]>([defaultNetwork, ethNetwork]),
 		createEncryptionStorage(createIndexedDBStorage(), new GCMEncryption(hexPassword)),
 		'networks'
 	);

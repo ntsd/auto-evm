@@ -7,7 +7,7 @@ import {
 import { get, writable } from 'svelte/store';
 import type { Schedule } from '../types';
 import { IntervalBasedCronScheduler, parseCronExpression } from '@hotcode/cron-schedule';
-import { callSmartContract } from '$lib/evmCall';
+import { callSmartContract } from '$lib/callSmartContract';
 import { getWallet } from './walletsStore';
 import { getNetwork } from './networksStore';
 import { getContract } from './contractsStore';

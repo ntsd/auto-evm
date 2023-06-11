@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { addToken, updateToken } from '../../stores/tokenStore';
-	import { networksStore } from '../../stores/networksStore';
 	import { addToastMessage } from '../../stores/toastStore';
-	import type { Token } from '../../types';
+	import type { Network, Token } from '../../types';
 
+	export let network: Network;
 	export let isEdit: boolean = false;
 	export let token: Token = {
 		name: '',
 		address: '',
 		decimal: 8,
-		chainId: ''
+		chainId: network.chainId
 	};
 
 	let forId = isEdit ? `edit-token-${token.address}` : 'add-token';
@@ -33,7 +33,7 @@
 
 		token.name = '';
 		token.address = '';
-		token.chainId = '';
+		token.chainId = network.chainId;
 	}
 </script>
 
@@ -72,17 +72,6 @@
 					disabled={isEdit}
 					class="input input-bordered"
 				/>
-			</div>
-			<div class="form-control">
-				<div class="label">
-					<span class="label-text">Network</span>
-				</div>
-				<select bind:value={token.chainId} class="select select-bordered">
-					<option value="">Select a network</option>
-					{#each $networksStore as network}
-						<option value={network.chainId}>{network.name}</option>
-					{/each}
-				</select>
 			</div>
 			<div class="form-control">
 				{#if isEdit}

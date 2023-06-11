@@ -9,7 +9,7 @@ export interface Network {
 	name: string;
 	rpcURL: string;
 	currencySymbol: string;
-	blockExplorerUrl: string;
+	blockExplorerUrl?: string;
 }
 
 export interface SmartContract {
