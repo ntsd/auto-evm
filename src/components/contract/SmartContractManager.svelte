@@ -11,7 +11,6 @@
 		<h2 class="text-2xl mb-4">Contracts</h2>
 		<div class="flex flex-col lg:flex-row">
 			<select bind:value={chainId} class="select select-bordered">
-				<option value="">Select a network</option>
 				{#each $networksStore as network}
 					<option value={network.chainId}>{network.name}</option>
 				{/each}

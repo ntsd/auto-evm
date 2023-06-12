@@ -41,13 +41,15 @@
 					<td>{token.address}</td>
 					<td>{token.decimal}</td>
 					<td>
-						{#await getBalance(walletAddress, network, token)}
-							Loading
-						{:then balance}
-							{balance}
-						{:catch error}
-							<p style="color: red">{error.message}</p>
-						{/await}
+						{#if walletAddress}
+							{#await getBalance(walletAddress, network, token)}
+								Loading
+							{:then balance}
+								{balance}
+							{:catch error}
+								<p style="color: red">{error.message}</p>
+							{/await}
+						{/if}
 					</td>
 					<td>
 						<TokenModal {network} isEdit {token} />

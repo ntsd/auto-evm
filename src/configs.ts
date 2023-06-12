@@ -10,7 +10,7 @@ export const defaultNetwork: Network = {
 	chainId: '5',
 	currencySymbol: 'ETH',
 	blockExplorerUrl: 'https://goerli.etherscan.io'
-}; 
+};
 
 export const ethNetwork: Network = {
 	rpcURL: 'https://eth.llamarpc.com',
@@ -18,7 +18,7 @@ export const ethNetwork: Network = {
 	chainId: '1',
 	currencySymbol: 'ETH',
 	blockExplorerUrl: 'https://etherscan.io'
-}; 
+};
 
 export const menus = [
 	{

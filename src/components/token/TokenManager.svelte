@@ -14,13 +14,11 @@
 		<h2 class="text-2xl mb-4">Tokens</h2>
 		<div class="flex flex-col lg:flex-row">
 			<select bind:value={walletAddress} class="select select-bordered">
-				<option value="">Select a wallet</option>
 				{#each $walletsStore as wallet}
 					<option value={wallet.address}>{wallet.name}</option>
 				{/each}
 			</select>
 			<select bind:value={network} class="select select-bordered">
-				<option value="">Select a network</option>
 				{#each $networksStore as n}
 					<option value={n}>{n.name}</option>
 				{/each}
